@@ -1,1 +1,3 @@
-<app-cube [count]="three.count$ | async"></app-cube>
+<button (click)="three.start()">Start</button>
+<button (click)="three.stop()">Stop</button>
+<app-cube [renderer]="three.renderer"></app-cube>
