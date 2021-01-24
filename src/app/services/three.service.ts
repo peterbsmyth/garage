@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, interval, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +10,13 @@ export class ThreeService {
   public count$: Observable<number> = this.countSubject.asObservable();
 
   constructor() {
-    let count = 0;
-    setInterval(() => {
-      this.countSubject.next(++count);
-    }, 1000);
+    let count = this.countSubject.getValue();
+    interval(1000)
+      .pipe(
+        tap(() => {
+          this.countSubject.next(++count);
+        })
+      )
+      .subscribe();
   }
 }
