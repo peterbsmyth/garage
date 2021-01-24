@@ -50,4 +50,8 @@ export class ThreeService {
   public stop(): void {
     this.subscription.unsubscribe();
   }
+
+  public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {}
+
+  public rotateCube(direction: 'left' | 'right' | 'up' | 'down'): void {}
 }
