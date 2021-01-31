@@ -4,12 +4,12 @@ import { GaragePage } from './pages/garage/garage.page';
 
 const routes: Routes = [
   {
-    path: 'garage',
+    path: 'garage/:thing',
     component: GaragePage,
   },
   {
     path: '',
-    redirectTo: 'garage',
+    redirectTo: 'garage/cube',
     pathMatch: 'full',
   },
 ];
