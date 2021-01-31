@@ -54,23 +54,23 @@ export class ThreeService {
 
   public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {
     const move = {
-      left: () => this.camera.position.x -= 0.1,
-      right: () => this.camera.position.x += 0.1,
-      in: () => this.camera.position.z -= 0.1,
-      out: () => this.camera.position.z += 0.1,
-    }
-    move[movement]?.()
+      left: () => (this.camera.position.x -= 0.1),
+      right: () => (this.camera.position.x += 0.1),
+      in: () => (this.camera.position.z -= 0.1),
+      out: () => (this.camera.position.z += 0.1),
+    };
+    move[movement]?.();
     this.renderer.render(this.scene, this.camera);
   }
 
   public rotateCube(direction: 'left' | 'right' | 'up' | 'down'): void {
     const rotate = {
-      left: () => this.cube.rotation.y -= 0.1,
-      right: () => this.cube.rotation.y += 0.1,
-      up: () => this.cube.rotation.x += 0.1,
-      down: () => this.cube.rotation.x -= 0.1,
-    }
-    rotate[direction]?.()
+      left: () => (this.cube.rotation.y -= 0.1),
+      right: () => (this.cube.rotation.y += 0.1),
+      up: () => (this.cube.rotation.x += 0.1),
+      down: () => (this.cube.rotation.x -= 0.1),
+    };
+    rotate[direction]?.();
     this.renderer.render(this.scene, this.camera);
   }
 }
