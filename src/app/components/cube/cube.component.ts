@@ -24,4 +24,5 @@ export class CubeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.canvasEl.nativeElement.appendChild(this.renderer.domElement);
   }
+  
 }

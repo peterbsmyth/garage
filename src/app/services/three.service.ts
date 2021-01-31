@@ -30,7 +30,8 @@ export class ThreeService {
   constructor() {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.scene.add(this.cube);
-    this.camera.position.z = 5;
+    this.camera.position.z = 3;
+    this.renderer.render(this.scene, this.camera);
   }
 
   public start(): void {
@@ -51,7 +52,25 @@ export class ThreeService {
     this.subscription.unsubscribe();
   }
 
-  public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {}
+  public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {
+    const move = {
+      left: () => this.camera.position.x -= 0.1,
+      right: () => this.camera.position.x += 0.1,
+      in: () => this.camera.position.z -= 0.1,
+      out: () => this.camera.position.z += 0.1,
+    }
+    move[movement]?.()
+    this.renderer.render(this.scene, this.camera);
+  }
 
-  public rotateCube(direction: 'left' | 'right' | 'up' | 'down'): void {}
+  public rotateCube(direction: 'left' | 'right' | 'up' | 'down'): void {
+    const rotate = {
+      left: () => this.cube.rotation.y -= 0.1,
+      right: () => this.cube.rotation.y += 0.1,
+      up: () => this.cube.rotation.x += 0.1,
+      down: () => this.cube.rotation.x -= 0.1,
+    }
+    rotate[direction]?.()
+    this.renderer.render(this.scene, this.camera);
+  }
 }
