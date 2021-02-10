@@ -4,6 +4,7 @@ import {
   PerspectiveCamera,
   PointLight,
   Scene,
+  Vector3,
   WebGLRenderer,
 } from 'three';
 import { CubeService } from '../services/cube.service';
@@ -19,6 +20,7 @@ export class ThreeFacade {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.position.z = 3;
+    this.camera.position.y = 1;
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -30,6 +32,11 @@ export class ThreeFacade {
     1000
   );
   public renderer = new WebGLRenderer();
+  private direction = new Vector3;
+  private bob = (() => {
+    var counter = 0;
+    return () => 0.05*Math.sin(0.4*counter++)+1;
+  })()
 
   public display(thing: string): void {
     if (thing === 'cube') {
@@ -52,10 +59,16 @@ export class ThreeFacade {
 
   public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {
     const move = {
-      left: () => (this.camera.position.x -= 0.1),
-      right: () => (this.camera.position.x += 0.1),
-      in: () => (this.camera.position.z -= 0.1),
-      out: () => (this.camera.position.z += 0.1),
+      left: () => {this.camera.rotation.y += 0.05},
+      right: () => {this.camera.rotation.y -= 0.05},
+      in: () => {
+        this.camera.translateZ(-0.1);
+        this.camera.position.y = this.bob();
+      },
+      out: () => {
+        this.camera.translateZ(0.1);
+        this.camera.position.y = this.bob();
+      },
     };
     move[movement]?.();
     this.renderer.render(this.scene, this.camera);

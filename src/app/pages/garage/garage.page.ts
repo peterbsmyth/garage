@@ -12,18 +12,31 @@ export class GaragePage implements OnInit, OnDestroy {
   constructor(public three: ThreeFacade, private route: ActivatedRoute) {}
   private unsubscribe = new Subject();
   private keyDownSubject: BehaviorSubject<string> = new BehaviorSubject(null);
+  private keyUpSubject: BehaviorSubject<string> = new BehaviorSubject(null);
+  private keyUp$ = this.keyUpSubject.asObservable();
+  private keyDown$ = this.keyDownSubject.asObservable();
   private thing = '';
-  keyDown$ = this.keyDownSubject.asObservable();
-  private keyCommand = {
-    ArrowLeft: () => this.three.rotate(this.thing, 'left'),
-    ArrowRight: () => this.three.rotate(this.thing, 'right'),
-    ArrowUp: () => this.three.rotate(this.thing, 'up'),
-    ArrowDown: () => this.three.rotate(this.thing, 'down'),
-    w: () => this.three.moveCamera('in'),
-    a: () => this.three.moveCamera('left'),
-    s: () => this.three.moveCamera('out'),
-    d: () => this.three.moveCamera('right'),
-  };
+  private keys = [];
+  
+  // private keyCommand = {
+  //   ArrowLeft: () => this.three.moveCamera('left'),
+  //   ArrowRight: () => this.three.moveCamera('right'),
+  //   ArrowUp: () => this.three.moveCamera('in'),
+  //   ArrowDown: () => this.three.moveCamera('out'),
+  //   w: () => this.three.moveCamera('in'),
+  //   a: () => this.three.moveCamera('left'),
+  //   s: () => this.three.moveCamera('out'),
+  //   d: () => this.three.moveCamera('right'),
+  // };
+
+  
+
+  private walk = () => {
+    this.keys['ArrowLeft'] && this.three.moveCamera('left')
+    this.keys['ArrowRight'] && this.three.moveCamera('right')
+    this.keys['ArrowUp'] && this.three.moveCamera('in')
+    this.keys['ArrowDown'] && this.three.moveCamera('out')
+  }
 
   @HostListener('window:keydown', ['$event'])
   keyDown(k: KeyboardEvent): void {
@@ -31,13 +44,26 @@ export class GaragePage implements OnInit, OnDestroy {
     this.keyDownSubject.next(key);
   }
 
+  @HostListener('window:keyup', ['$event'])
+  keyUp(k: KeyboardEvent): void {
+    const { key } = k;
+    this.keyUpSubject.next(key);
+  }
+
   ngOnInit(): void {
     this.thing = this.route.snapshot.params.thing;
     this.three.display(this.thing);
+    setInterval(this.walk, 20);
     this.keyDown$
       .pipe(
         takeUntil(this.unsubscribe),
-        tap((key) => this.keyCommand[key]?.())
+        tap((key) => this.keys[key] = true)
+      )
+      .subscribe();
+    this.keyUp$
+      .pipe(
+        takeUntil(this.unsubscribe),
+        tap((key) => this.keys[key] = false)
       )
       .subscribe();
   }
