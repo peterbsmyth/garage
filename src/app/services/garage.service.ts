@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { AmbientLight, PointLight } from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ObjService {
-  public garage;
+  private garage;
   private loader;
 
   constructor() {
@@ -20,13 +21,16 @@ export class ObjService {
     );
   }
 
-  public rotate(direction: 'left' | 'right' | 'up' | 'down'): void {
-    const rotate = {
-      left: () => (this.garage.rotation.y -= 0.1),
-      right: () => (this.garage.rotation.y += 0.1),
-      up: () => (this.garage.rotation.x += 0.1),
-      down: () => (this.garage.rotation.x -= 0.1),
-    };
-    rotate[direction]?.();
+  public init(scene, camera?, renderer?): void {
+    const ambientLight = new AmbientLight(0xcccccc, 0.4);
+    scene.add(ambientLight);
+
+    const pointLight = new PointLight(0xffffff, 0.8);
+    camera.add(pointLight);
+
+    setTimeout(() => {
+      scene.add(this.garage);
+      renderer.render(scene, camera);
+    }, 2000);
   }
 }

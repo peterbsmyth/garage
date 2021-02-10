@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { ThreeFacade } from 'src/app/application/three.facade';
 
@@ -17,7 +17,7 @@ export class GaragePage implements OnInit, OnDestroy {
   private keyDown$ = this.keyDownSubject.asObservable();
   private thing = '';
   private keys = [];
-  
+
   // private keyCommand = {
   //   ArrowLeft: () => this.three.moveCamera('left'),
   //   ArrowRight: () => this.three.moveCamera('right'),
@@ -29,14 +29,12 @@ export class GaragePage implements OnInit, OnDestroy {
   //   d: () => this.three.moveCamera('right'),
   // };
 
-  
-
   private walk = () => {
-    this.keys['ArrowLeft'] && this.three.moveCamera('left')
-    this.keys['ArrowRight'] && this.three.moveCamera('right')
-    this.keys['ArrowUp'] && this.three.moveCamera('in')
-    this.keys['ArrowDown'] && this.three.moveCamera('out')
-  }
+    this.keys['ArrowLeft'] && this.three.moveCamera('left');
+    this.keys['ArrowRight'] && this.three.moveCamera('right');
+    this.keys['ArrowUp'] && this.three.moveCamera('in');
+    this.keys['ArrowDown'] && this.three.moveCamera('out');
+  };
 
   @HostListener('window:keydown', ['$event'])
   keyDown(k: KeyboardEvent): void {
@@ -53,17 +51,17 @@ export class GaragePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.thing = this.route.snapshot.params.thing;
     this.three.display(this.thing);
-    setInterval(this.walk, 20);
+    interval(20).pipe(takeUntil(this.unsubscribe), tap(this.walk)).subscribe();
     this.keyDown$
       .pipe(
         takeUntil(this.unsubscribe),
-        tap((key) => this.keys[key] = true)
+        tap((key) => (this.keys[key] = true))
       )
       .subscribe();
     this.keyUp$
       .pipe(
         takeUntil(this.unsubscribe),
-        tap((key) => this.keys[key] = false)
+        tap((key) => (this.keys[key] = false))
       )
       .subscribe();
   }
