@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { CubeService } from '../services/cube.service';
 import { ObjService } from '../services/garage.service';
+import { GlbService } from '../services/glb.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThreeFacade {
-  constructor(private cube: CubeService, private garage: ObjService) {
+  constructor(
+    private cube: CubeService,
+    private garage: ObjService,
+    private glb: GlbService
+  ) {
     this.scene.add(this.camera);
 
     this.renderer.setPixelRatio(window.devicePixelRatio);
