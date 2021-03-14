@@ -15,7 +15,7 @@ export class GlbService {
     // dracoLoader.setDecoderPath('/examples/js/libs/draco/');
     // this.loader.setDRACOLoader(dracoLoader);
     this.loader.load(
-      '/assets/garage.glb',
+      'https://wyatts-garage.s3.us-east-2.amazonaws.com/garage.glb',
       (gltf) => {
         console.log(gltf);
         this.gltf = gltf;
