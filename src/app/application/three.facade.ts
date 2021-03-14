@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { Clock, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { CubeService } from '../services/cube.service';
 import { ObjService } from '../services/garage.service';
 import { GlbService } from '../services/glb.service';
@@ -19,9 +19,10 @@ export class ThreeFacade {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.position.z = 3;
     this.camera.position.y = 1;
-    this.renderer.render(this.scene, this.camera);
   }
 
+  private mixer;
+  private clock = new Clock();
   private scene = new Scene();
   private camera = new PerspectiveCamera(
     75,
@@ -36,7 +37,8 @@ export class ThreeFacade {
   })();
 
   public display(thing: string): void {
-    this[thing].init(this.scene, this.camera, this.renderer);
+    this[thing].init(this.scene, this.camera, this.renderer, this.mixer);
+    this.animate();
   }
 
   public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {
@@ -71,6 +73,15 @@ export class ThreeFacade {
       down: () => (this[thing].rotation.x -= 0.1),
     };
     rotate[direction]?.();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  private animate(): void {
+    requestAnimationFrame(this.animate);
+    if (this.mixer) {
+      this.mixer.update(this.clock.getDelta());
+    }
+
     this.renderer.render(this.scene, this.camera);
   }
 }

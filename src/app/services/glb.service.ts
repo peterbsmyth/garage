@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AmbientLight, PointLight } from 'three';
+import { AmbientLight, AnimationMixer, PointLight } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 @Injectable({
@@ -33,6 +33,11 @@ export class GlbService {
     camera.add(pointLight);
 
     setTimeout(() => {
+      const mixer = new AnimationMixer(this.gltf.scene);
+      this.gltf.animations.forEach((animation) => {
+        const action = mixer.clipAction(animation);
+        action.play();
+      });
       scene.add(this.gltf.scene);
       renderer.render(scene, camera);
     }, 5000);
