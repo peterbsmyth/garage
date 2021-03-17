@@ -1,5 +1,4 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, interval, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { ThreeFacade } from 'src/app/application/three.facade';
@@ -9,13 +8,12 @@ import { ThreeFacade } from 'src/app/application/three.facade';
   styleUrls: ['./garage.page.scss'],
 })
 export class GaragePage implements OnInit, OnDestroy {
-  constructor(public three: ThreeFacade, private route: ActivatedRoute) {}
+  constructor(public three: ThreeFacade) {}
   private unsubscribe = new Subject();
   private keyDownSubject: BehaviorSubject<string> = new BehaviorSubject(null);
   private keyUpSubject: BehaviorSubject<string> = new BehaviorSubject(null);
   private keyUp$ = this.keyUpSubject.asObservable();
   private keyDown$ = this.keyDownSubject.asObservable();
-  private thing = '';
   private keys = [];
 
   // private keyCommand = {
@@ -49,8 +47,7 @@ export class GaragePage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.thing = this.route.snapshot.params.thing;
-    this.three.display(this.thing);
+    this.three.display('glb');
     interval(20).pipe(takeUntil(this.unsubscribe), tap(this.walk)).subscribe();
     this.keyDown$
       .pipe(
