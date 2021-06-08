@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, interval, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
+import { NetworkStatusFacade } from 'src/app/application/network-status.facade';
 import { ThreeFacade } from 'src/app/application/three.facade';
 
 @Component({
@@ -8,7 +9,7 @@ import { ThreeFacade } from 'src/app/application/three.facade';
   styleUrls: ['./garage.page.scss'],
 })
 export class GaragePage implements OnInit, OnDestroy {
-  constructor(public three: ThreeFacade) {}
+  constructor(public three: ThreeFacade, public network: NetworkStatusFacade) {}
   private unsubscribe = new Subject();
   private keyDownSubject: BehaviorSubject<string> = new BehaviorSubject(null);
   private keyUpSubject: BehaviorSubject<string> = new BehaviorSubject(null);

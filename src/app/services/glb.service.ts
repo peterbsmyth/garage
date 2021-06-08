@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AmbientLight, PointLight } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,20 +9,25 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 export class GlbService {
   private gltf;
   private loader;
-
-  constructor() {
+  private loading = false;
+  constructor(private busy: BusyService) {
     this.loader = new GLTFLoader();
-    // const dracoLoader = new DRACOLoader();
-    // dracoLoader.setDecoderPath('/examples/js/libs/draco/');
-    // this.loader.setDRACOLoader(dracoLoader);
     this.loader.load(
       'https://wyatts-garage.s3.us-east-2.amazonaws.com/garage.glb',
       (gltf) => {
-        console.log(gltf);
+        this.busy.decrement();
         this.gltf = gltf;
       },
-      () => {},
-      (err) => console.error(err)
+      () => {
+        if (!this.loading) {
+          this.busy.increment();
+          this.loading = true;
+        }
+      },
+      (err) => {
+        this.busy.decrement()
+        console.error(err)
+      }
     );
   }
 

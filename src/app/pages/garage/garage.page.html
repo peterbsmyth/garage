@@ -1,1 +1,7 @@
-<app-cube [renderer]="three.renderer"></app-cube>
+<ng-container *ngIf="network.loading$ | async; else cube">
+    <img src="https://wyatts-garage.s3.us-east-2.amazonaws.com/loader.png" alt="wyberworld">
+</ng-container>
+
+<ng-template #cube>
+    <app-cube [renderer]="three.renderer"></app-cube>
+</ng-template>
