@@ -39,7 +39,7 @@ export class ThreeFacade {
     this[thing].init(this.scene, this.camera, this.renderer);
   }
 
-  public moveCamera(movement: 'left' | 'right' | 'in' | 'out'): void {
+  public moveCamera(movement: 'left' | 'right' | 'in' | 'out' | 'up' | 'down'): void {
     const move = {
       left: () => {
         this.camera.rotation.y += 0.05;
@@ -54,6 +54,12 @@ export class ThreeFacade {
       out: () => {
         this.camera.translateZ(0.1);
         this.camera.position.y = this.bob();
+      },
+      up: () => {
+        this.camera.rotation.x += 0.05;
+      },
+      down: () => {
+        this.camera.rotation.x -= 0.05;
       },
     };
     move[movement]?.();
