@@ -17,18 +17,9 @@ export class GaragePage implements OnInit, OnDestroy {
   private keyDown$ = this.keyDownSubject.asObservable();
   private keys = [];
 
-  // private keyCommand = {
-  //   ArrowLeft: () => this.three.moveCamera('left'),
-  //   ArrowRight: () => this.three.moveCamera('right'),
-  //   ArrowUp: () => this.three.moveCamera('in'),
-  //   ArrowDown: () => this.three.moveCamera('out'),
-  //   w: () => this.three.moveCamera('in'),
-  //   a: () => this.three.moveCamera('left'),
-  //   s: () => this.three.moveCamera('out'),
-  //   d: () => this.three.moveCamera('right'),
-  // };
-
   private walk = () => {
+    this.keys['q'] && this.three.moveCamera('up');
+    this.keys['a'] && this.three.moveCamera('down');
     this.keys['ArrowLeft'] && this.three.moveCamera('left');
     this.keys['ArrowRight'] && this.three.moveCamera('right');
     this.keys['ArrowUp'] && this.three.moveCamera('in');
