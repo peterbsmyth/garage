@@ -15,12 +15,11 @@ export class GlbService {
     this.loader.load(
       'https://wyatts-garage.s3.us-east-2.amazonaws.com/garage.glb',
       (gltf) => {
-        this.busy.decrement();
         this.gltf = gltf;
       },
       () => {
         if (!this.loading) {
-          this.busy.increment();
+          
           this.loading = true;
         }
       },
@@ -32,15 +31,30 @@ export class GlbService {
   }
 
   public init(scene, camera?, renderer?): void {
+    const that = this
     const ambientLight = new AmbientLight(0xcccccc, 0.4);
     scene.add(ambientLight);
 
     const pointLight = new PointLight(0xffffff, 0.8);
     camera.add(pointLight);
 
-    setTimeout(() => {
-      scene.add(this.gltf.scene);
-      renderer.render(scene, camera);
-    }, 5000);
+    this.busy.increment();
+
+    let gltfExists = false;
+    const interval = setInterval(addToScene, 100);
+
+    function addToScene () {
+      if (that.gltf && !gltfExists) {
+        gltfExists = true
+      }
+
+      if (gltfExists) {
+        scene.add(that.gltf.scene);
+        renderer.render(scene, camera);
+        that.busy.decrement();
+        clearInterval(interval)
+      }
+    }
+    
   }
 }
